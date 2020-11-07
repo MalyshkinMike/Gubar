@@ -1,7 +1,7 @@
 from numpy import cos, sin, fabs
 from matplotlib import pyplot as canvas
 import numpy as np
-
+# 2 лаба работает, но не маскирована
 func1 = lambda x, y: cos(x + 0.5) - 2 - y
 func2 = lambda x, y: sin(y) - 2 * x - 1
 F = lambda x, y: np.array([[func1(x, y)], [func2(x, y)]])
