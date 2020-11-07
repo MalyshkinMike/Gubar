@@ -1,4 +1,4 @@
-# 6 лаба тоже рабочая, но не "заоригиналеная"
+# 6 лаба тоже рабочая, но не "заоригиналеная".
 import numpy as np
 import matplotlib.pyplot as plt
 a = 0
