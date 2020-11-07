@@ -46,7 +46,7 @@ def Newton(x, X, Y, h):
 
 
 a = 0
-b = 0.35
+b = 0.3
 h = (b - a) / 3
 
 plotter.figure(1)
