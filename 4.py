@@ -1,4 +1,4 @@
-# 4 лаба пока мой вариант, после 3 обновлю
+# 4 лаба пока мой вариант, после 3 обновлю.
 
 import numpy as np
 import matplotlib.pyplot as plt
