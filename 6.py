@@ -1,4 +1,4 @@
-from numpy import cos, exp, sin
+# 6 лаба тоже рабочая, но не "заоригиналеная"
 import numpy as np
 import matplotlib.pyplot as plt
 a = 0

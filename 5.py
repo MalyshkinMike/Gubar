@@ -1,3 +1,5 @@
+# 5 готова, но не маскирована под оригинальность
+
 import numpy
 import matplotlib.pyplot as canvas
 from numpy import log as ln

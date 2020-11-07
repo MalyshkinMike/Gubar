@@ -1,4 +1,4 @@
-# coding=utf-8
+# 3 лаба пока не готова
 
 import numpy
 import matplotlib.pyplot as plotter
