@@ -1,40 +1,40 @@
 # 3 лаба
 
-import numpy
+import numpy as np
 from numpy import fabs
-import matplotlib.pyplot as plotter
+import matplotlib.pyplot as canvas
 
 
 def f(x):
-    return (numpy.pi * x - 3) / (x - 1) ** 2
+    return (np.pi * x - 3) / (x - 1) ** 2
 
 
 def f2(x):
-    return 2 * (x - 1) - 5 * (numpy.pi * (x ** 2 + x - 2) - 9 * x + 9)  # 2⋅(x−1)−5⋅(π⋅(x2+x−2)−9⋅x+9)
+    return 2 * (x - 1) - 5 * (np.pi * (x ** 2 + x - 2) - 9 * x + 9)  # 2⋅(x−1)−5⋅(π⋅(x2+x−2)−9⋅x+9)
 
 
 def f4(x):
-    return 24 * ((x - 1) ** -7) * (numpy.pi * (x * (x + 3) - 4) - 15 * x + 15)
+    return 24 * ((x - 1) ** -7) * (np.pi * (x * (x + 3) - 4) - 15 * x + 15)
 
 
 def f4abs(x):
     return fabs(f4(x))
 
 
-def Lagrange(arg, x, y):
-    L = 0
+def lagrange_P(arg, x, y):
+    Lagrange = 0
     size = len(x)
     for i in range(size):
         l = 1
         for j in range(size):
             if i != j:
                 l = l * (arg - x[j]) / (x[i] - x[j])
-        L = L + l * y[i]
-    return L
+        Lagrange = Lagrange + l * y[i]
+    return Lagrange
 
 
-def Newton(x, X, Y, h):
-    res = Y[0]
+def newton_P(x, X, Y, h):
+    Newton = Y[0]
     t = (x - X[0]) / h
     diff = [0] * 4
     for i in range(len(Y)):
@@ -46,11 +46,11 @@ def Newton(x, X, Y, h):
         for j in range(0, i + 1):
             temp *= (t - j)
             temp /= (j + 1)
-        res = res + temp
-    return res
+        Newton = Newton + temp
+    return Newton
 
 
-def find_max(func, x1, x2, eps):
+def func_max(func, x1, x2, eps):
     while fabs(x1 - x2) >= eps:
         y1 = fabs(func(((x1 + x2) / 2) - eps))
         y2 = fabs(func(((x1 + x2) / 2) + eps))
@@ -66,9 +66,8 @@ a = 0
 eps = 0.001
 b = 0.9
 
-
 '''def find_err(a_arg, b_arg):
-    xx = numpy.linspace(a_arg, b_arg, num=4)
+    xx = np.linspace(a_arg, b_arg, num=4)
 
     def w_4(argument):
         return (argument - xx[0]) * (argument - xx[1]) * (argument - xx[2]) * (argument - xx[3])
@@ -87,38 +86,38 @@ print(b)
 
 b = 0.43
 h = (b - a) / 3
-plotter.figure(1)
-x = numpy.arange(a, b, 0.001)
-plotter.title("График 4 производной")
-plotter.xlabel("x")
-plotter.ylabel("y")
-plotter.grid()
-plotter.plot(x, f4(x))
+canvas.figure(1)
+x = np.arange(a, b, 0.001)
+canvas.title("График 4 производной")
+canvas.xlabel("x")
+canvas.ylabel("y")
+canvas.grid()
+canvas.plot(x, f4(x))
 
-X = numpy.array([a, a + h, a + 2 * h, a + 3 * h])
+X = np.array([a, a + h, a + 2 * h, a + 3 * h])
 Y = f(X)
 lagrange, newton, function = [], [], []
 
 for i in range(len(x)):
-    lagrange.append(Lagrange(x[i], X, Y))
-    newton.append(Newton(x[i], X, Y, h))
+    lagrange.append(lagrange_P(x[i], X, Y))
+    newton.append(newton_P(x[i], X, Y, h))
     function.append(f(x[i]))
 
-plotter.figure(2)
-plotter.title("Полиномы")
-plotter.xlabel("x")
-plotter.grid()
-plotter.plot(x, newton, label="Ньютон")
-plotter.plot(x, lagrange, label="Лагранж")
-plotter.plot(x, function, label="Функция")
-plotter.legend()
+canvas.figure(2)
+canvas.title("Полиномы")
+canvas.xlabel("x")
+canvas.grid()
+canvas.plot(x, newton, label="Ньютон")
+canvas.plot(x, lagrange, label="Лагранж")
+canvas.plot(x, function, label="Функция")
+canvas.legend()
 
-plotter.figure(3)
-plotter.title("Абслоютные погрешности")
-plotter.xlabel("x")
-plotter.ylabel("Rn(x)")
-plotter.plot(x, abs(f(x) - newton), label="Ньютон")
-plotter.plot(x, abs(f(x) - lagrange), label="Лагранж")
-plotter.legend()
-plotter.grid()
-plotter.show()
+canvas.figure(3)
+canvas.title("Абслоютные погрешности")
+canvas.xlabel("x")
+canvas.ylabel("Rn(x)")
+canvas.plot(x, abs(f(x) - newton), label="Ньютон")
+canvas.plot(x, abs(f(x) - lagrange), label="Лагранж")
+canvas.legend()
+canvas.grid()
+canvas.show()
