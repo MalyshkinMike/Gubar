@@ -22,18 +22,18 @@ def dichotomy(a, b, f, eps):
     return x1, i
 
 
-def regula_falsi(a, b, f, eps):
+
+def gybrid(x_1, x0, f, eps):
     i = 0
-    while (fabs(b - a) > 2 * eps):
+    x1 = x0 - f(x0)(x0 - x_1)/(f(x0) - f(x_1))
+    while True:
         i += 1
-        x1 = a - (f(a) * (b - a)) / (f(b) - f(a))
-        y = f(x1)
-        ymin = f(a)
-        if ((y > 0 and ymin > 0) or (y < 0 and ymin < 0)):
-            a = x1
-        else:
-            b = x1
-    return x1, i
+        if fabs(x1 - x0) <= eps:
+            return x1, i
+
+        x0 = x1
+        x_1 = x0
+        x1 = x0 - f(x0)(x0 - x_1)/(f(x0) - f(x_1))
 
 
 gr_x_min = int(input("левая граница графика ►"))
@@ -52,8 +52,11 @@ eps = 0.00001
 left_border = float(input("левая граница начального приближения ► "))
 right_border = float(input("правая граница начального приближения ► "))
 dichotomy_res = dichotomy(left_border, right_border, func, eps)
-regula_falsi_res = regula_falsi(left_border, right_border, func, eps)
+print("Введите 2 точки (х) начального приближения для гибридного метода")
+x_1 = float(input('\t1 ► '))
+x0 = float(input('\t2 ► '))
+gybrid_res = gybrid(x_1, x0, func, eps)
 print("Метод дихотомии\n" + "\tРезультат ►" + str(dichotomy_res[0]) + "\n\tКоличество итераций ►" + str(
     dichotomy_res[1]) + "\n\tточность ►" + str(eps))
-print("Метод хорд\n" + "\tРезультат ►" + str(regula_falsi_res[0]) + "\n\tКоличество итераций ►" + str(
-    regula_falsi_res[1]) + "\n\tточность ►" + str(eps))
+print("Гибридный метод\n" + "\tРезультат ►" + str(gybrid_res[0]) + "\n\tКоличество итераций ►" + str(
+    gybrid_res[1]) + "\n\tточность ►" + str(eps))
