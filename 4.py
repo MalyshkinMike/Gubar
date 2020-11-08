@@ -1,21 +1,28 @@
-# 4 лаба пока мой вариант, после 3 обновлю.
-
 import numpy as np
 import matplotlib.pyplot as plt
-def func(arg):
-    return arg ** 2 * np.pi * np.exp(5 * arg) + 1 / arg
-def f2(arg):
-    return 2 * np.pi * np.exp(5 * arg) + 20 * arg * np.pi * np.exp(5 * arg) + 25 * np.pi * arg ** 2 * np.exp(5 * arg) + 2 / arg ** 3
-def dif_4(arg):
-    return 625 * np.pi * arg ** 2 * np.exp(5 * arg) + 1000 * np.pi * arg * np.exp(5 * arg) + 300 * np.pi * np.exp(5 * arg) + 24 / (arg ** 5)
+
+
+def f(x):
+    return (np.pi * x - 3) / (x - 1) ** 2
+
+
+def f2(x):
+    return 2 * (x - 1) - 5 * (np.pi * (x ** 2 + x - 2) - 9 * x + 9)  # 2⋅(x−1)−5⋅(π⋅(x2+x−2)−9⋅x+9)
+
+
+def f4(x):
+    return 24 * ((x - 1) ** -7) * (np.pi * (x * (x + 3) - 4) - 15 * x + 15)
+
+
 def lin_spline(dots, x, y):
     h = x[1] - x[0]
     S = np.array([y[0],
-    y[1],
-    y[2],
-    (y[1] - y[0]) / h,
-    (y[2] - y[1]) / h,
-    (y[3] - y[2]) / h])
+                  y[1],
+                  y[2],
+                  (y[1] - y[0]) / h,
+                  (y[2] - y[1]) / h,
+                  (y[3] - y[2]) / h
+                  ])
     res = []
     for i in range(len(dots)):
         if x[0] <= dots[i] <= x[1]:
@@ -26,27 +33,28 @@ def lin_spline(dots, x, y):
             res.append(S[2] + S[5] * (dots[i] - x[2]))
     return res
 
+
 def par_spline(dots, x, y):
     a = 2
-# a1,a2,a3, b1,b2, b3,c1, c2, c3
+    # a1,a2,a3, b1,b2, b3,c1, c2, c3
     A = np.array([[1, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 1, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 1, 0, 0, 0, 0, 0, 0],
-    [1, 0, 0, h, 0, 0, h * h, 0, 0],
-    [0, 1, 0, 0, h, 0, 0, h * h, 0],
-    [0, 0, 1, 0, 0, h, 0, 0, h * h],
-    [0, 0, 0, 1, -1, 0, 2 * h, 0, 0],
-    [0, 0, 0, 0, 1, -1, 0, 2 * h, 0],
-    [0, 0, 0, 0, 0, 0, 2, 0, 0]])
+                  [0, 1, 0, 0, 0, 0, 0, 0, 0],
+                  [0, 0, 1, 0, 0, 0, 0, 0, 0],
+                  [1, 0, 0, h, 0, 0, h * h, 0, 0],
+                  [0, 1, 0, 0, h, 0, 0, h * h, 0],
+                  [0, 0, 1, 0, 0, h, 0, 0, h * h],
+                  [0, 0, 0, 1, -1, 0, 2 * h, 0, 0],
+                  [0, 0, 0, 0, 1, -1, 0, 2 * h, 0],
+                  [0, 0, 0, 0, 0, 0, 2, 0, 0]])
     B = np.array([[y[0]],
-    [y[1]],
-    [y[2]],
-    [y[1]],
-    [y[2]],
-    [y[3]],
-    [0],
-    [0],
-    [f2(a)]])
+                  [y[1]],
+                  [y[2]],
+                  [y[1]],
+                  [y[2]],
+                  [y[3]],
+                  [0],
+                  [0],
+                  [f2(a)]])
     S = np.linalg.solve(A, B)
     S = S.ravel()
     res = []
@@ -63,32 +71,33 @@ def par_spline(dots, x, y):
             res.append(S[2] + S[5] * t + S[8] * t * t)
     return res
 
+
 def cub_spline(dots, x, y):
     # a1,a2,a3,b1,b2, b3,c1, c2, c3, d1, d2, d3
     A = np.array([[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [1, 0, 0, h, 0, 0, h * h, 0, 0, h ** 3, 0, 0],
-    [0, 1, 0, 0, h, 0, 0, h * h, 0, 0, h ** 3, 0],
-    [0, 0, 1, 0, 0, h, 0, 0, h * h, 0, 0, h ** 3],
-    [0, 0, 0, 1, -1, 0, 2 * h, 0, 0, 3 * h * h, 0, 0],
-    [0, 0, 0, 0, 1, -1, 0, 2 * h, 0, 0, 3 * h * h, 0],
-    [0, 0, 0, 0, 0, 0, 2, -2, 0, 6 * h, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 6 * h, 0],
-    [0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 6 * h]])
+                  [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                  [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                  [1, 0, 0, h, 0, 0, h * h, 0, 0, h ** 3, 0, 0],
+                  [0, 1, 0, 0, h, 0, 0, h * h, 0, 0, h ** 3, 0],
+                  [0, 0, 1, 0, 0, h, 0, 0, h * h, 0, 0, h ** 3],
+                  [0, 0, 0, 1, -1, 0, 2 * h, 0, 0, 3 * h * h, 0, 0],
+                  [0, 0, 0, 0, 1, -1, 0, 2 * h, 0, 0, 3 * h * h, 0],
+                  [0, 0, 0, 0, 0, 0, 2, -2, 0, 6 * h, 0, 0],
+                  [0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 6 * h, 0],
+                  [0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0],
+                  [0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 6 * h]])
     B = np.array([[y[0]],
-    [y[1]],
-    [y[2]],
-    [y[1]],
-    [y[2]],
-    [y[3]],
-    [0],
-    [0],
-    [0],
-    [0],
-    [f2(a)],
-    [f2(b)]])
+                  [y[1]],
+                  [y[2]],
+                  [y[1]],
+                  [y[2]],
+                  [y[3]],
+                  [0],
+                  [0],
+                  [0],
+                  [0],
+                  [f2(a)],
+                  [f2(b)]])
     S = np.linalg.solve(A, B)
     S = S.ravel()
     res = []
@@ -103,6 +112,8 @@ def cub_spline(dots, x, y):
             t = dots[i] - x[2]
             res.append(S[2] + S[5] * t + S[8] * t ** 2 + S[11] * t ** 3)
     return res
+
+
 def lagrange(arg, x, y):
     L = 0
     size = len(x)
@@ -111,9 +122,9 @@ def lagrange(arg, x, y):
         for j in range(size):
             if i != j:
                 l = l * (arg - x[j]) / (x[i] - x[j])
-                L = L + l * y[i]
-
+        L = L + l * y[i]
     return L
+
 
 def newton(x, X, Y, h):
     res = Y[0]
@@ -121,27 +132,29 @@ def newton(x, X, Y, h):
     diff = [0] * 4
     for i in range(len(Y)):
         diff[i] = Y[i]
-        for i in range(len(X) - 1):
-            for j in range(len(X) - i - 1):
-                diff[j] = diff[j + 1] - diff[j]
-            temp = diff[0]
-            for j in range(0, i + 1):
-                temp *= (t - j)
-                temp /= (j + 1)
-            res = res + temp
+    for i in range(len(X) - 1):
+        for j in range(len(X) - i - 1):
+            diff[j] = diff[j + 1] - diff[j]
+        temp = diff[0]
+        for j in range(0, i + 1):
+            temp *= (t - j)
+            temp /= (j + 1)
+        res = res + temp
     return res
-a = 2
-b = 2.5
+
+
+a = 0
+b = 0.43
 x = np.arange(a, b, 0.001)
 # h = 0.16
 h = (b - a) / 3
 X = np.array([a, a + h, a + 2 * h, a + 3 * h])
-Y = func(X)
+Y = f(X)
 lagr, newt, function = [], [], []
 for i in range(len(x)):
     lagr.append(lagrange(x[i], X, Y))
     newt.append(newton(x[i], X, Y, h))
-    function.append(func(x[i]))
+    function.append(f(x[i]))
 l_spline = lin_spline(x, X, Y)
 p_spline = par_spline(x, X, Y)
 c_spline = cub_spline(x, X, Y)
@@ -159,11 +172,11 @@ plt.figure(5)
 plt.title("Абслоютные погрешности")
 plt.xlabel("x")
 plt.ylabel("Rn(x)")
-plt.plot(x, abs(func(x) - newt), label="Ньютон")
-plt.plot(x, abs(func(x) - lagr), label="Лагранж")
-plt.plot(x, abs(func(x) - l_spline), label="L Сплайн")
-plt.plot(x, abs(func(x) - p_spline), label="P Сплайн")
-plt.plot(x, abs(func(x) - c_spline), label="C Сплайн")
+plt.plot(x, abs(f(x) - newt), label="Ньютон")
+plt.plot(x, abs(f(x) - lagr), label="Лагранж")
+plt.plot(x, abs(f(x) - l_spline), label="L Сплайн")
+plt.plot(x, abs(f(x) - p_spline), label="P Сплайн")
+plt.plot(x, abs(f(x) - c_spline), label="C Сплайн")
 plt.legend()
 plt.grid()
 plt.show()
