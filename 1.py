@@ -47,8 +47,8 @@ canvas.grid()
 canvas.show()
 
 eps = 0.00001
-left_border = float(input("левая граница начального приближения ►"))
-right_border = float(input("правая граница начального приближения ►"))
+left_border = float(input("левая граница начального приближения ► "))
+right_border = float(input("правая граница начального приближения ► "))
 dichotomy_res = dichotomy(left_border, right_border, func, eps)
 regula_falsi_res = regula_falsi(left_border, right_border, func, eps)
 print("Метод дихотомии\n" + "\tРезультат ►" + str(dichotomy_res[0]) + "\n\tКоличество итераций ►" + str(dichotomy_res[1]) + "\n\tточность ►" + str(eps))
