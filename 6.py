@@ -80,7 +80,7 @@ def doube_step_Eiler(h, eiler):
 
 def comparing(runge, eiler):
     x = np.linspace(a, b, num=n + 1)
-    runge_y_wave, runge_delta_y = double_h_Runge(h, runge)
+    runge_y_wave, runge_delta_y = double_step_Runge(h, runge)
     eiler_y_wave, eiler_delta_y = doube_step_Eiler(h, eiler)
     print("Рунге-Кутта")
     print(f" x\t\t yi\t\tyi2\t\tdy")
@@ -140,12 +140,12 @@ print()
 print("Сравнение решений в узловых точках: ")
 comparing(runge_res, eiler_res)
 x = np.linspace(a, b, num=n + 1)
-canvas.figure(1)
+
 canvas.xlabel("x")
 canvas.ylabel("y")
 canvas.grid()
-canvas.plot(x, runge_res, label="Рунге-Кутта")
 canvas.plot(x, eiler_res, label="Эйлера")
+canvas.plot(x, runge_res, label="Runge")
 canvas.plot(x, exact(x), label="Точное")
 canvas.legend()
 canvas.show()
